@@ -9,7 +9,7 @@ class GridTest extends AnyFlatSpec {
     val inputWidth = 2
     val inputHeight = 3
 
-    val cells = mutable.ArraySeq(
+    val expectedCells = mutable.ArraySeq(
       mutable.ArraySeq(
         Cell(Point(0, 0), CellStatus.EMPTY),
         Cell(Point(1, 0), CellStatus.EMPTY)
@@ -23,8 +23,7 @@ class GridTest extends AnyFlatSpec {
         Cell(Point(1, 2), CellStatus.EMPTY)
       )
     )
-
-    val expected = new Grid(cells = cells)
+    val expected = new Grid(cells = expectedCells)
 
     val output = Grid(inputWidth, inputHeight)
 
@@ -40,6 +39,27 @@ class GridTest extends AnyFlatSpec {
     val output = Grid(inputWidth, inputHeight)
 
     assert(expected == output)
+  }
+
+  "Grid" should "correctly serialize object" in {
+
+    val input = Grid(10, 8)
+
+    val expected =
+      """..........
+        |..........
+        |..........
+        |..........
+        |..........
+        |..........
+        |..........
+        |..........
+        |""".stripMargin
+
+    val output = input.serialize()
+    
+    assert(output == expected)
+
   }
 
 }

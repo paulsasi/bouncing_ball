@@ -10,6 +10,21 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
   @targetName("equality")
   def ==(other: Grid): Boolean = this.cells sameElements other.getCells
 
+  def serialize(): String = {
+    val z = this.cells.reverse
+      .map { row =>
+        val rowStr = row.map { cell =>
+          cell match
+            case Cell(_, CellStatus.EMPTY) => "."
+            case Cell(_, CellStatus.ACTIVE) => "@"
+            case _ => throw new RuntimeException("Impossible to serialize cell" +
+              "status.")
+        }
+        rowStr.reduce((x, y) => x + y) + sys.props("line.separator")
+      }.reduce((x, y) => x + y)
+    z
+  }
+
 }
 
 object Grid {
