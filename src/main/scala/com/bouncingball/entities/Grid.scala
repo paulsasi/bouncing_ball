@@ -5,13 +5,43 @@ import scala.collection.mutable
 
 case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
 
+  private val nRows: Int = this.cells.length
+  private val nCols: Int = this.cells(0).length
+
   private def getCells: mutable.ArraySeq[mutable.ArraySeq[Cell]] = this.cells
 
   @targetName("equality")
-  def ==(other: Grid): Boolean = this.cells sameElements other.getCells
+  def ==(other: Grid): Boolean = this.cells == other.getCells
+
+  def insert(ball: Ball): Unit = {
+
+    // Boundary box
+    val xBoundaryMin = ball.center.x - ball.radius
+    val xBoundaryMax = ball.center.x + ball.radius
+    val yBoundaryMin = ball.center.y - ball.radius
+    val yBoundaryMax = ball.center.y + ball.radius
+
+    if (xBoundaryMin < 0 ||  this.nCols <= xBoundaryMax || yBoundaryMin < 0 || this.nRows <= yBoundaryMax) {
+      throw new RuntimeException("Cannot insert ball outside grid!! Please " +
+        "select a valid ball starting point")
+    }
+
+
+    for (x <- xBoundaryMin to xBoundaryMax) {
+      for (y <- yBoundaryMin to yBoundaryMax) {
+        val candidateCell = this.cells(y)(x)
+
+        if (ball.contains(candidateCell.point))
+          this.cells(y).update(x, candidateCell.copy(status = CellStatus.ACTIVE))
+
+      }
+    }
+
+
+  }
 
   def serialize(): String = {
-    val z = this.cells.reverse
+    this.cells.reverse
       .map { row =>
         val rowStr = row.map { cell =>
           cell match
@@ -22,7 +52,6 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
         }
         rowStr.reduce((x, y) => x + y) + sys.props("line.separator")
       }.reduce((x, y) => x + y)
-    z
   }
 
 }
@@ -31,7 +60,8 @@ object Grid {
 
   def apply(width: Int, height: Int): Grid = {
 
-    if (width == 0 || height == 0) return Grid(mutable.ArraySeq())
+    if (width == 0 || height == 0) throw new RuntimeException("Grid dimensions" +
+      "cannot equal 0")
 
     val cellsArray = new Array[Array[Cell]](height)
     (0 until height).foreach { y =>
