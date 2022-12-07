@@ -1,7 +1,9 @@
 package com.bouncingball.main
 
 import com.bouncingball.entities._
-import com.bouncingball.interactor.{Displayer, Serializer}
+import com.bouncingball.interactor.Serializer
+import com.bouncingball.repository
+import com.bouncingball.repository.{Displayer, PrinterResource, PrinterStdOut}
 
 object Main extends App {
 
@@ -17,8 +19,8 @@ object Main extends App {
   grid.insert(ball)
 
   private val serializer = Serializer(background)
-  private val printer = System.out
-  private val displayer = Displayer(serializer, printer)
+  private val printer: PrinterResource = new PrinterStdOut()
+  private val displayer = repository.Displayer(serializer, printer)
 
   displayer.show(grid)
 
@@ -26,6 +28,7 @@ object Main extends App {
 
   private val velocity = Point(1, 0)
 
+  print("a")
   (1 to 30).foreach { aFrame =>
     val nextBall = Ball(ballCenterBeg + velocity * aFrame, ballRadius)
 

@@ -1,22 +1,20 @@
-package com.bouncingball.interactor
+package com.bouncingball.repository
 
 import com.bouncingball.entities.Grid
 import com.bouncingball.interactor.Serializer
 
-import java.io.PrintStream
-
 case class Displayer(
     serializer: Serializer,
-    printer: PrintStream
+    printer: PrinterResource
 ) {
   def show(grid: Grid): Unit = {
     printer.print(serializer.serialize(grid))
   }
 
   def clear(grid: Grid): Unit = {
-    val count = grid.nRows / 2;
-    printer.print(String.format("\u001b[%dA", count)); // Move up
-    printer.print(" \u001b[2K"); // Erase line content
+    val count = grid.nRows / 2
+    printer.print("\u001b[%dA" format count) // Move up
+    printer.print("\u001b[2K"); // Erase line content
   }
 
 }

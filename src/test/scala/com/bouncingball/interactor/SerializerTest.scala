@@ -3,7 +3,7 @@ package com.bouncingball.interactor
 import com.bouncingball.entities.{Ball, Grid, Point}
 import org.scalatest.flatspec.AnyFlatSpec
 
-class serializerTest extends AnyFlatSpec{
+class SerializerTest extends AnyFlatSpec{
 
   "Serialize" should "produce expected output - 1" in {
 
