@@ -1,6 +1,5 @@
 package com.bouncingball.entities
 
-import scala.annotation.targetName
 import scala.collection.mutable
 
 case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
@@ -13,7 +12,6 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
   def getReverseCells: mutable.ArraySeq[mutable.ArraySeq[Cell]] =
     this.cells.reverse
 
-  @targetName("equality")
   def ==(other: Grid): Boolean = this.cells == other.getCells
 
   @throws[RuntimeException]
@@ -45,7 +43,7 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
 
   }
 
-  def flash(value: CellStatus = CellStatus.EMPTY): Unit = {
+  def flash(value: CellStatus.CellStatus = CellStatus.EMPTY): Unit = {
     for (i <- cells.indices) {
       for (j <- cells(i).indices) {
         val cellFlashed = cells(i)(j).copy(status = value)

@@ -9,12 +9,13 @@ case class Serializer(background: Char = ' ') {
   def serialize(grid: Grid): String = {
     val serialization = grid.getReverseCells
       .map { row =>
-        val rowStr = row.map { cell =>
-          cell match
-            case Cell(_, CellStatus.EMPTY) => "."
-            case Cell(_, CellStatus.ACTIVE) => "*"
-            case _ => throw new RuntimeException("Impossible to serialize cell" +
-              "status.")
+        val rowStr = row.map {
+          case Cell(_, CellStatus.EMPTY)  => "."
+          case Cell(_, CellStatus.ACTIVE) => "*"
+          case _ =>
+            throw new RuntimeException(
+              "Impossible to serialize cell" +
+                "status.")
         }
         rowStr.reduce((x, y) => x + y)
       }
@@ -24,7 +25,8 @@ case class Serializer(background: Char = ' ') {
       .reduce((x, y) => x + y)
   }
 
-  private def compress(rows: mutable.ArraySeq[String]): mutable.ArraySeq[String] = {
+  private def compress(
+      rows: mutable.ArraySeq[String]): mutable.ArraySeq[String] = {
     // . . * *
     // . * . *
     //   _ ^ C

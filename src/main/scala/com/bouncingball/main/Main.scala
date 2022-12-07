@@ -1,9 +1,7 @@
 package com.bouncingball.main
 
-import com.bouncingball.entities.*
-import com.bouncingball.interactor.Serializer
-import com.bouncingball.repository
-import com.bouncingball.repository.Displayer
+import com.bouncingball.entities._
+import com.bouncingball.interactor.{Displayer, Serializer}
 
 object Main extends App {
 
@@ -19,11 +17,12 @@ object Main extends App {
   grid.insert(ball)
 
   private val serializer = Serializer(background)
-  private val displayer = repository.Displayer(serializer)
+  private val printer = System.out
+  private val displayer = Displayer(serializer, printer)
 
   displayer.show(grid)
 
-  private val FPS = 15
+  private val FPS = 60
 
   private val velocity = Point(1, 0)
 
