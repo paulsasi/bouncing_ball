@@ -3,11 +3,12 @@ package com.bouncingball.entities
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.collection.mutable
+
 class GridTest extends AnyFlatSpec {
 
   "Grid" should "correctly initialize object - 1" in {
     val inputWidth = 2
-    val inputHeight = 3
+    val inputHeight = 4
 
     val expectedCells = mutable.ArraySeq(
       mutable.ArraySeq(
@@ -21,6 +22,10 @@ class GridTest extends AnyFlatSpec {
       mutable.ArraySeq(
         Cell(Point(0, 2), CellStatus.EMPTY),
         Cell(Point(1, 2), CellStatus.EMPTY)
+      ),
+      mutable.ArraySeq(
+        Cell(Point(0, 3), CellStatus.EMPTY),
+        Cell(Point(1, 3), CellStatus.EMPTY)
       )
     )
     val expected = new Grid(cells = expectedCells)
@@ -106,6 +111,43 @@ class GridTest extends AnyFlatSpec {
 
     assertThrows[RuntimeException](grid.insert(inputBall))
   }
-  
+
+  "Flash" should "produce expected output - 1" in {
+    val grid = Grid(4, 4)
+    val inputBall = Ball(Point(2, 2), 1)
+
+    val expected = new Grid(
+      cells = mutable.ArraySeq(
+        mutable.ArraySeq(
+          Cell(Point(0, 0), CellStatus.EMPTY),
+          Cell(Point(1, 0), CellStatus.EMPTY),
+          Cell(Point(2, 0), CellStatus.EMPTY),
+          Cell(Point(3, 0), CellStatus.EMPTY)
+        ),
+        mutable.ArraySeq(
+          Cell(Point(0, 1), CellStatus.EMPTY),
+          Cell(Point(1, 1), CellStatus.EMPTY),
+          Cell(Point(2, 1), CellStatus.EMPTY),
+          Cell(Point(3, 1), CellStatus.EMPTY)
+        ),
+        mutable.ArraySeq(
+          Cell(Point(0, 2), CellStatus.EMPTY),
+          Cell(Point(1, 2), CellStatus.EMPTY),
+          Cell(Point(2, 2), CellStatus.EMPTY),
+          Cell(Point(3, 2), CellStatus.EMPTY)
+        ),
+        mutable.ArraySeq(
+          Cell(Point(0, 3), CellStatus.EMPTY),
+          Cell(Point(1, 3), CellStatus.EMPTY),
+          Cell(Point(2, 3), CellStatus.EMPTY),
+          Cell(Point(3, 3), CellStatus.EMPTY)
+        )
+      ))
+
+    grid.insert(inputBall)
+    grid.flash()
+
+    assert(grid == expected)
+  }
 
 }

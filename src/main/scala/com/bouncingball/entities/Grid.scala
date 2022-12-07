@@ -1,14 +1,12 @@
 package com.bouncingball.entities
 
-import com.bouncingball.main.Main.gridHeight
-
 import scala.annotation.targetName
 import scala.collection.mutable
 
 case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
 
-  private val nRows: Int = this.cells.length
-  private val nCols: Int = this.cells(0).length
+  val nRows: Int = this.cells.length
+  val nCols: Int = this.cells(0).length
 
   private def getCells: mutable.ArraySeq[mutable.ArraySeq[Cell]] = this.cells
 
@@ -18,6 +16,7 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
   @targetName("equality")
   def ==(other: Grid): Boolean = this.cells == other.getCells
 
+  @throws[RuntimeException]
   def insert(ball: Ball): Unit = {
 
     // Boundary box
@@ -44,6 +43,15 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
       }
     }
 
+  }
+
+  def flash(value: CellStatus = CellStatus.EMPTY): Unit = {
+    for (i <- cells.indices) {
+      for (j <- cells(i).indices) {
+        val cellFlashed = cells(i)(j).copy(status = value)
+        cells(i).update(j, cellFlashed)
+      }
+    }
   }
 
 }
