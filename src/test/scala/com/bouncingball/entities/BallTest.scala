@@ -32,4 +32,16 @@ class BallTest extends AnyFlatSpec {
     assert(inputBall.contains(inputPoint))
   }
 
+  "isWithin" should "produce the expected output - 1" in {
+    val inputBall = Ball(Point(3, 3), 3)
+
+    assert(inputBall.isWithin(10, 10))
+  }
+
+  "isWithin" should "produce the expected output - 2" in {
+    val inputBall = Ball(Point(3, 3), 3)
+
+    assert(!inputBall.isWithin(5, 5))
+  }
+
 }
