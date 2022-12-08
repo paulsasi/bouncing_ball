@@ -35,13 +35,13 @@ case object Arguments {
       opt[Unit]("grid")
         .action((_, c) => c.copy(gridArgs = GridArgs()))
         .children(
-          opt[Int]("width")
+          opt[Int]("w")
             .text("Grid width")
             .action((in, self) => self.copy(self.gridArgs.copy(width = in))),
-          opt[Int]("height")
+          opt[Int]("h")
             .text("Grid height")
             .action((in, self) => self.copy(self.gridArgs.copy(height = in))),
-          opt[(String, String)]("gravity")
+          opt[(String, String)]("g")
             .text("Grid gravity")
             .action((in, self) =>
               self.copy(
@@ -59,15 +59,15 @@ case object Arguments {
       opt[Unit]("ball")
         .action((_, c) => c.copy(ballArgs = BallArgs()))
         .children(
-          opt[(Int, Int)]("position")
+          opt[(Int, Int)]("p")
             .text("Ball starting position")
             .action((in, self) =>
               self.copy(ballArgs = self.ballArgs.copy(position = in))),
-          opt[Int]("radius")
+          opt[Int]("r")
             .text("Ball radius")
             .action((in, self) =>
               self.copy(ballArgs = self.ballArgs.copy(radius = in))),
-          opt[(String, String)]("velocity")
+          opt[(String, String)]("v")
             .text("Ball starting position")
             .action((in, self) =>
               self.copy(ballArgs =
