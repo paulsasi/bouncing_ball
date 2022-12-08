@@ -43,7 +43,7 @@ class GridTest extends AnyFlatSpec {
 
   }
 
-  "Insert ball" should "produce expected output - 1" in {
+  "Insert ball" should "produce expected output" in {
     val grid = Grid(6, 6)
     val inputBall = Ball(Point(3, 3), 2)
 
@@ -103,13 +103,6 @@ class GridTest extends AnyFlatSpec {
     grid.insert(inputBall)
 
     assert(grid == expected)
-  }
-
-  "Insert ball" should "produce expected output - 2" in {
-    val grid = Grid(6, 6)
-    val inputBall = Ball(Point(5, 5), 3)
-
-    assertThrows[RuntimeException](grid.insert(inputBall))
   }
 
   "Flash" should "produce expected output - 1" in {

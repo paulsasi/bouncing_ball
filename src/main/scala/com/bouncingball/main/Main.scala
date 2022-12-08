@@ -5,17 +5,23 @@ import com.bouncingball.entities._
 import com.bouncingball.exceptions.BallPositionError
 import com.bouncingball.interactor.{Displayer, Serializer}
 import com.bouncingball.repository.{PrinterResource, PrinterStdOut}
+
+import scala.concurrent.duration._
 object Main {
 
   def main(args: Array[String]): Unit = {
     val arguments = Arguments.getArguments(args)
 
-    val ballBouncer = new BallBouncer(arguments)
-    ballBouncer.run(1)
+    // Repository
+    val printer: PrinterResource = new PrinterStdOut()
+    val ballBouncer = new BallBouncer(arguments, printer)
+
+    val deadline = 5.minute.fromNow
+    ballBouncer.run(deadline)
   }
 }
 
-class BallBouncer(args: Arguments) {
+class BallBouncer(args: Arguments, printer: PrinterResource) {
 
   private val Width = args.gridArgs.width
   private val Height = args.gridArgs.height
@@ -33,10 +39,9 @@ class BallBouncer(args: Arguments) {
   private val Background = args.displayArgs.background
   private val serializer = Serializer(Background)
 
-  private val printer: PrinterResource = new PrinterStdOut()
   private val displayer = Displayer(serializer, printer)
 
-  def run(duration: Int): Unit = {
+  def run(deadline: Deadline): Unit = {
 
     // Init grid
     val grid = Grid(Width, Height)
@@ -53,7 +58,7 @@ class BallBouncer(args: Arguments) {
 
     var position = initialPosition
     var velocity = Point(args.ballArgs.velocity)
-    while (true) {
+    while (deadline.hasTimeLeft) {
 
       // Update velocity and position
       velocity += Gravity * Dt
@@ -62,11 +67,9 @@ class BallBouncer(args: Arguments) {
       // Check ball reached any corner
       if (position.y - Radius < 0) {
         velocity *= Point(1, -DensityFloor)
-      }
-      else if (position.x - Radius < 0) {
+      } else if (position.x - Radius < 0) {
         velocity *= Point(-DensityWall, 1)
-      }
-      else if (position.x + Radius > Width) {
+      } else if (position.x + Radius > Width) {
         velocity *= Point(-DensityWall, 1)
       }
 
