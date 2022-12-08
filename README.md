@@ -3,7 +3,7 @@
 
 A simple ASCII animated bouncing ball in the CLI.
 
-![Alt Text](/static/bouncing_ball.gif)
+![Alt Text](/static/bouncing_ball_demostration.gif)
 
 ## Usage
 
