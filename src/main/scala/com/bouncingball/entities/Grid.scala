@@ -18,16 +18,16 @@ case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
   def insert(ball: Ball): Unit = {
 
     // Boundary box
-    val xBoundaryMin = ball.center.x - ball.radius
-    val xBoundaryMax = ball.center.x + ball.radius
-    val yBoundaryMin = ball.center.y - ball.radius
-    val yBoundaryMax = ball.center.y + ball.radius
-
-    if (xBoundaryMin < 0 || this.nCols <= xBoundaryMax || yBoundaryMin < 0 || this.nRows <= yBoundaryMax) {
-      throw new RuntimeException(
-        "Cannot insert ball outside grid!! Please " +
-          "select a valid ball starting point")
-    }
+    val xBoundaryMin = (ball.center.x - ball.radius).floor.toInt.max(0)
+    val xBoundaryMax = (ball.center.x + ball.radius).ceil.toInt.min(nCols - 1)
+    val yBoundaryMin = (ball.center.y - ball.radius).floor.toInt.max(0)
+    val yBoundaryMax = (ball.center.y + ball.radius).ceil.toInt.min(nRows - 1)
+//
+//    if (xBoundaryMin < 0 || this.nCols <= xBoundaryMax || yBoundaryMin < 0 || this.nRows <= yBoundaryMax) {
+//      throw new RuntimeException(
+//        "Cannot insert ball outside grid!! Please " +
+//          "select a valid ball starting point")
+//    }
 
     for (x <- xBoundaryMin to xBoundaryMax) {
       for (y <- yBoundaryMin to yBoundaryMax) {

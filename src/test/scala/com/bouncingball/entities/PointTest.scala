@@ -20,7 +20,7 @@ class PointTest extends AnyFlatSpec{
     assert(point1 + point2 == expected)
   }
 
-  "multiplication" should "produce the expected results - 1" in {
+  "multiplication(scalar)" should "produce the expected results - 1" in {
     val point = Point(1, 1)
     val scalar = 2
 
@@ -28,12 +28,28 @@ class PointTest extends AnyFlatSpec{
     assert(point * scalar == expected)
   }
 
-  "multiplication" should "produce the expected results - 2" in {
+  "multiplication(scalar)" should "produce the expected results - 2" in {
     val point = Point(5, -4)
     val scalar = -3
 
     val expected = Point(-15, 12)
     assert(point * scalar == expected)
+  }
+
+  "multiplication" should "produce the expected results - 1" in {
+    val point1 = Point(1, 1)
+    val point2 = Point(2, 2)
+
+    val expected = Point(2, 2)
+    assert(point1 * point2 == expected)
+  }
+
+  "multiplication" should "produce the expected results - 2" in {
+    val point1 = Point(3, -4)
+    val point2 = Point(-4, -2)
+
+    val expected = Point(-12, 8)
+    assert(point1 * point2 == expected)
   }
 
 }
