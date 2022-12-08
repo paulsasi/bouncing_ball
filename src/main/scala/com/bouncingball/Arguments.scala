@@ -12,7 +12,7 @@ case class GridArgs(
     width: Int = 136,
     height: Int = 64,
     gravity: (Float, Float) = (0, -50f),
-    ceilDensity: Float = 0.95f,
+    floorDensity: Float = 0.95f,
     wallDensity: Float = 0.8f,
 )
 
@@ -46,11 +46,11 @@ case object Arguments {
             .action((in, self) =>
               self.copy(
                 self.gridArgs.copy(gravity = (in._1.toFloat, in._2.toFloat)))),
-          opt[String]("ceilDensity")
-            .text("Density of the ceil")
+          opt[String]("floord")
+            .text("Density of the floor")
             .action((in, self) =>
-              self.copy(self.gridArgs.copy(ceilDensity = in.toFloat))),
-          opt[String]("wallDensity")
+              self.copy(self.gridArgs.copy(floorDensity = in.toFloat))),
+          opt[String]("walld")
             .text("Density of the wall")
             .action((in, self) =>
               self.copy(self.gridArgs.copy(wallDensity = in.toFloat))),

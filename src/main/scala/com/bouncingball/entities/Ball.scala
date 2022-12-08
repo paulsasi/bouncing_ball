@@ -11,7 +11,7 @@ case class Ball(center: Point, radius: Int) {
   }
 
   def isWithin(width: Int, height: Int): Boolean = {
-    //TODO: Test me
+    //TODO: Test me and do integration testing
 
     val isLeftWithin = center.x - radius >= 0
     val isRightWithin = center.x + radius <= width
