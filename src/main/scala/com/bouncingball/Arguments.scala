@@ -18,8 +18,8 @@ case class GridArgs(
 
 case class BallArgs(
     position: (Int, Int) = (20, 44),
-    radius: Int = 20,
-    velocity: (Float, Float) = (50, 0),
+    radius: Int = 10,
+    velocity: (Float, Float) = (100, 0),
 )
 
 case class DisplayArgs(
