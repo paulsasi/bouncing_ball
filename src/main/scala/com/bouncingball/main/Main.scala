@@ -1,74 +1,92 @@
 package com.bouncingball.main
 
+import com.bouncingball.Arguments
 import com.bouncingball.entities._
-import com.bouncingball.interactor.Serializer
-import com.bouncingball.repository.{Displayer, PrinterResource, PrinterStdOut}
+import com.bouncingball.exceptions.BallPositionError
+import com.bouncingball.interactor.{Displayer, Serializer}
+import com.bouncingball.repository.{PrinterResource, PrinterStdOut}
+object Main {
 
-object Main extends App {
+  def main(args: Array[String]): Unit = {
+    val arguments = Arguments.getArguments(args)
 
-  private val background = '.'
-
-  private val gridWidth: Int = 136
-  private val gridHeight: Int = 64
-  val grid = Grid(gridWidth, gridHeight)
-
-  private var position = Point(20, 44)
-  private val ballRadius = 20
-  // Assert initial ball is in grid
-  try {
-    assert(position.x - ballRadius >= 0)
-    assert(position.x + ballRadius <= gridWidth)
-    assert(position.y - ballRadius >= 0)
-    assert(position.y + ballRadius <= gridHeight)
-  } catch {
-    case _: AssertionError =>
-      throw new RuntimeException(
-        "Initial ball must be" +
-          "inside the grid!!")
+    val ballBouncer = new BallBouncer(arguments)
+    ballBouncer.run(1)
   }
+}
 
-  private var ball = Ball(position, ballRadius)
-  grid.insert(ball)
+class BallBouncer(args: Arguments) {
 
-  private val serializer = Serializer(background)
+  private val Width = args.gridArgs.width
+  private val Height = args.gridArgs.height
+
+  private val Radius = args.ballArgs.radius
+
+  private val Gravity = Point(args.gridArgs.gravity)
+
+  private val DensityCeil = args.gridArgs.ceilDensity
+  private val DensityWall = args.gridArgs.wallDensity
+
+  private val Fps = args.displayArgs.fps
+  private val Dt = 1f / Fps
+
+  private val Background = args.displayArgs.background
+  private val serializer = Serializer(Background)
+
   private val printer: PrinterResource = new PrinterStdOut()
   private val displayer = Displayer(serializer, printer)
 
-  displayer.show(grid)
+  def run(duration: Int): Unit = {
 
-  private val FPS = 15
-  private val DT: Float = 1f / FPS
+    // Init grid
+    val grid = Grid(Width, Height)
 
-  private val DENSITY_CEIL = 0.95f
-  private val DENSITY_WALL = 0.8f
+    // Init ball
+    val initialPosition = Point.fromIntTuple(args.ballArgs.position)
+    val initialBall = Ball(initialPosition, Radius)
 
-  private val gravity = Point(0, -50f)
-  private var velocity = Point(50, -1)
+    // Insert ball
+    assertBallIsValid(initialBall)
+    grid.insert(initialBall)
 
-  while (true) {
-    velocity = velocity + (gravity * DT)
-    position = position + velocity * DT
-
-    if (position.y - ballRadius < 0) {
-      velocity *= Point(1, -DENSITY_CEIL)
-    }
-
-    if (position.x - ballRadius < 0) {
-      velocity *= Point(-DENSITY_WALL, 1)
-    }
-    if (position.x + ballRadius > gridWidth) {
-      velocity *= Point(-DENSITY_WALL, 1)
-    }
-
-    ball = Ball(position, ballRadius)
-
-    grid.flash()
-    grid.insert(ball)
-
-    displayer.clear(grid)
     displayer.show(grid)
 
-    Thread.sleep(1000 / FPS)
+    var position = initialPosition
+    var velocity = Point(args.ballArgs.velocity)
+    while (true) {
+
+      // Update velocity and position
+      velocity += Gravity * Dt
+      position += velocity * Dt
+
+      // Check ball reached any corner
+      if (position.y - Radius < 0) {
+        velocity *= Point(1, -DensityCeil)
+      }
+      else if (position.x - Radius < 0) {
+        velocity *= Point(-DensityWall, 1)
+      }
+      else if (position.x + Radius > Width) {
+        velocity *= Point(-DensityWall, 1)
+      }
+
+      // Insert updated ball
+      grid.flash()
+      grid.insert(Ball(position, Radius))
+
+      // Display updated grid
+      displayer.clear(grid)
+      displayer.show(grid)
+
+      Thread.sleep(1000 / Fps)
+    }
+
+  }
+
+  @throws[BallPositionError]
+  private def assertBallIsValid(ball: Ball): Unit = {
+    if (!ball.isWithin(Width, Height))
+      throw new BallPositionError("Initial ball must be inside the grid!!")
   }
 
 }

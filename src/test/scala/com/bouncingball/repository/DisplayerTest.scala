@@ -1,7 +1,8 @@
 package com.bouncingball.repository
 
 import com.bouncingball.entities.Grid
-import com.bouncingball.interactor.Serializer
+import com.bouncingball.interactor
+import com.bouncingball.interactor.{Displayer, Serializer}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -40,7 +41,7 @@ class DisplayerTest extends AnyFlatSpec with MockFactory {
       .print(_: String))
       .expects("\u001b[2K")
 
-    val displayer = Displayer(serializer, printer)
+    val displayer = interactor.Displayer(serializer, printer)
     displayer.clear(grid)
 
   }
@@ -59,7 +60,7 @@ class DisplayerTest extends AnyFlatSpec with MockFactory {
       .print(_: String))
       .expects("\u001b[2K")
 
-    val displayer = Displayer(serializer, printer)
+    val displayer = interactor.Displayer(serializer, printer)
     displayer.clear(grid)
 
   }

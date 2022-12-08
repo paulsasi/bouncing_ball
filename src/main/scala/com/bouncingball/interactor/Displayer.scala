@@ -1,7 +1,7 @@
-package com.bouncingball.repository
+package com.bouncingball.interactor
 
 import com.bouncingball.entities.Grid
-import com.bouncingball.interactor.Serializer
+import com.bouncingball.repository.PrinterResource
 
 case class Displayer(
     serializer: Serializer,
