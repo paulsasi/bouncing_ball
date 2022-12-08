@@ -12,14 +12,14 @@ case class GridArgs(
     width: Int = 136,
     height: Int = 64,
     gravity: (Float, Float) = (0, -50f),
-    ceilDensity: Float = 0.95f,
+    floorDensity: Float = 0.95f,
     wallDensity: Float = 0.8f,
 )
 
 case class BallArgs(
     position: (Int, Int) = (20, 44),
-    radius: Int = 20,
-    velocity: (Float, Float) = (50, 0),
+    radius: Int = 10,
+    velocity: (Float, Float) = (100, 0),
 )
 
 case class DisplayArgs(
@@ -35,22 +35,22 @@ case object Arguments {
       opt[Unit]("grid")
         .action((_, c) => c.copy(gridArgs = GridArgs()))
         .children(
-          opt[Int]("width")
+          opt[Int]("w")
             .text("Grid width")
             .action((in, self) => self.copy(self.gridArgs.copy(width = in))),
-          opt[Int]("height")
+          opt[Int]("h")
             .text("Grid height")
             .action((in, self) => self.copy(self.gridArgs.copy(height = in))),
-          opt[(String, String)]("gravity")
+          opt[(String, String)]("g")
             .text("Grid gravity")
             .action((in, self) =>
               self.copy(
                 self.gridArgs.copy(gravity = (in._1.toFloat, in._2.toFloat)))),
-          opt[String]("ceilDensity")
-            .text("Density of the ceil")
+          opt[String]("floord")
+            .text("Density of the floor")
             .action((in, self) =>
-              self.copy(self.gridArgs.copy(ceilDensity = in.toFloat))),
-          opt[String]("wallDensity")
+              self.copy(self.gridArgs.copy(floorDensity = in.toFloat))),
+          opt[String]("walld")
             .text("Density of the wall")
             .action((in, self) =>
               self.copy(self.gridArgs.copy(wallDensity = in.toFloat))),
@@ -59,15 +59,15 @@ case object Arguments {
       opt[Unit]("ball")
         .action((_, c) => c.copy(ballArgs = BallArgs()))
         .children(
-          opt[(Int, Int)]("position")
+          opt[(Int, Int)]("p")
             .text("Ball starting position")
             .action((in, self) =>
               self.copy(ballArgs = self.ballArgs.copy(position = in))),
-          opt[Int]("radius")
+          opt[Int]("r")
             .text("Ball radius")
             .action((in, self) =>
               self.copy(ballArgs = self.ballArgs.copy(radius = in))),
-          opt[(String, String)]("velocity")
+          opt[(String, String)]("v")
             .text("Ball starting position")
             .action((in, self) =>
               self.copy(ballArgs =

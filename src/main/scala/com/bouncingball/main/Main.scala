@@ -24,7 +24,7 @@ class BallBouncer(args: Arguments) {
 
   private val Gravity = Point(args.gridArgs.gravity)
 
-  private val DensityCeil = args.gridArgs.ceilDensity
+  private val DensityFloor = args.gridArgs.floorDensity
   private val DensityWall = args.gridArgs.wallDensity
 
   private val Fps = args.displayArgs.fps
@@ -61,7 +61,7 @@ class BallBouncer(args: Arguments) {
 
       // Check ball reached any corner
       if (position.y - Radius < 0) {
-        velocity *= Point(1, -DensityCeil)
+        velocity *= Point(1, -DensityFloor)
       }
       else if (position.x - Radius < 0) {
         velocity *= Point(-DensityWall, 1)
