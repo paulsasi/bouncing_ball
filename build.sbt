@@ -1,7 +1,7 @@
 lazy val root = (project in file("."))
   .settings(
     name := "bouncing_ball",
-    version := "0.1.1",
+    version := "1.0.0",
     scalaVersion := "2.13.10",
     Compile / run / mainClass := Some("com.bouncingball.main.Main")
   )
