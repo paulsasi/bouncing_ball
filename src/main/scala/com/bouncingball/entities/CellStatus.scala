@@ -1,5 +1,9 @@
 package com.bouncingball.entities
 
-enum CellStatus:
-  case EMPTY
-  case ACTIVE
+object CellStatus extends Enumeration {
+
+  type CellStatus = Value
+
+  val EMPTY, ACTIVE = Value
+
+}

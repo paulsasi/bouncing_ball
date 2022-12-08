@@ -1,57 +1,48 @@
 package com.bouncingball.entities
 
-import scala.annotation.targetName
 import scala.collection.mutable
 
 case class Grid(cells: mutable.ArraySeq[mutable.ArraySeq[Cell]]) {
 
-  private val nRows: Int = this.cells.length
-  private val nCols: Int = this.cells(0).length
+  val nRows: Int = this.cells.length
+  val nCols: Int = this.cells(0).length
 
   private def getCells: mutable.ArraySeq[mutable.ArraySeq[Cell]] = this.cells
 
-  @targetName("equality")
+  def getReverseCells: mutable.ArraySeq[mutable.ArraySeq[Cell]] =
+    this.cells.reverse
+
   def ==(other: Grid): Boolean = this.cells == other.getCells
 
   def insert(ball: Ball): Unit = {
 
     // Boundary box
-    val xBoundaryMin = ball.center.x - ball.radius
-    val xBoundaryMax = ball.center.x + ball.radius
-    val yBoundaryMin = ball.center.y - ball.radius
-    val yBoundaryMax = ball.center.y + ball.radius
-
-    if (xBoundaryMin < 0 ||  this.nCols <= xBoundaryMax || yBoundaryMin < 0 || this.nRows <= yBoundaryMax) {
-      throw new RuntimeException("Cannot insert ball outside grid!! Please " +
-        "select a valid ball starting point")
-    }
-
+    val xBoundaryMin = (ball.center.x - ball.radius).floor.toInt.max(0)
+    val xBoundaryMax = (ball.center.x + ball.radius).ceil.toInt.min(nCols - 1)
+    val yBoundaryMin = (ball.center.y - ball.radius).floor.toInt.max(0)
+    val yBoundaryMax = (ball.center.y + ball.radius).ceil.toInt.min(nRows - 1)
 
     for (x <- xBoundaryMin to xBoundaryMax) {
       for (y <- yBoundaryMin to yBoundaryMax) {
         val candidateCell = this.cells(y)(x)
 
         if (ball.contains(candidateCell.point))
-          this.cells(y).update(x, candidateCell.copy(status = CellStatus.ACTIVE))
+          this
+            .cells(y)
+            .update(x, candidateCell.copy(status = CellStatus.ACTIVE))
 
       }
     }
 
-
   }
 
-  def serialize(): String = {
-    this.cells.reverse
-      .map { row =>
-        val rowStr = row.map { cell =>
-          cell match
-            case Cell(_, CellStatus.EMPTY) => "."
-            case Cell(_, CellStatus.ACTIVE) => "@"
-            case _ => throw new RuntimeException("Impossible to serialize cell" +
-              "status.")
-        }
-        rowStr.reduce((x, y) => x + y) + sys.props("line.separator")
-      }.reduce((x, y) => x + y)
+  def flash(value: CellStatus.CellStatus = CellStatus.EMPTY): Unit = {
+    for (i <- cells.indices) {
+      for (j <- cells(i).indices) {
+        val cellFlashed = cells(i)(j).copy(status = value)
+        cells(i).update(j, cellFlashed)
+      }
+    }
   }
 
 }
@@ -60,8 +51,13 @@ object Grid {
 
   def apply(width: Int, height: Int): Grid = {
 
-    if (width == 0 || height == 0) throw new RuntimeException("Grid dimensions" +
-      "cannot equal 0")
+    if (height % 2 != 0)
+      throw new RuntimeException("Grid height must be divisible by two!")
+
+    if (width == 0 || height == 0)
+      throw new RuntimeException(
+        "Grid dimensions" +
+          "cannot equal 0")
 
     val cellsArray = new Array[Array[Cell]](height)
     (0 until height).foreach { y =>
