@@ -1,7 +1,7 @@
 
 # Bouncing Ball
 
-A simple bouncing ball animation in the CLI.
+A simple ASCII animated bouncing ball in the CLI.
 
 ![Alt Text](/static/bouncing_ball_demo.gif)
 
