@@ -3,7 +3,7 @@
 
 A simple bouncing ball animation in the CLI.
 
-![Alt Text](/static/bounding_ball_example.gif)
+![Alt Text](/static/bounding_ball_demo.gif)
 
 ## Usage
 
