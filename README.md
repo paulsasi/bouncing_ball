@@ -1,4 +1,8 @@
 
+<p align="center">
+<img src="/static/bouncing_ball.png" width="250" height="250">
+</p>
+
 # Bouncing Ball
 
 A simple ASCII animated bouncing ball in the CLI.
